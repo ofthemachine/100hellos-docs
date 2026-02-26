@@ -42,7 +42,7 @@ METADATA_PATH=/app/languages-metadata.yml \
 
 echo "==> Building Gatsby site..."
 cd /app
-npx gatsby build
+npx gatsby build --prefix-paths
 
 echo "==> Copying output to /static_site..."
 cp -r /app/public/* /static_site/
