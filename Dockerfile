@@ -12,7 +12,7 @@ COPY scripts/ ./scripts/
 COPY src/ ./src/
 COPY static/ ./static/
 
-RUN mkdir -p /app/src/content/languages && \
+RUN mkdir -p /app/src/content/languages /app/src/content/pages && \
     chmod +x /app/scripts/entrypoint.sh
 
 ENTRYPOINT ["/app/scripts/entrypoint.sh"]

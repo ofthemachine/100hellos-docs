@@ -199,16 +199,19 @@ function detectCapabilities(langDir) {
 }
 
 function generateInstallPage() {
+  fs.mkdirSync(PAGES_DIR, { recursive: true })
+
   const installMd = tryRead(path.join(FRAGLET_DIR, 'INSTALL.md'))
   if (!installMd) {
-    console.warn('    WARNING: INSTALL.md not found in fraglet repo — skipping install page')
-    return false
+    console.warn('    WARNING: INSTALL.md not found in fraglet repo — writing placeholder install page')
+    const placeholder = `---\nslug: "install"\ntitle: "Install fragletc"\n---\n\nInstall instructions are being prepared. See the [fraglet repository](https://github.com/ofthemachine/fraglet) for the latest setup guide.\n`
+    fs.writeFileSync(path.join(PAGES_DIR, 'install.md'), placeholder)
+    return true
   }
 
   const body = stripH1(installMd)
   const content = `---\nslug: "install"\ntitle: "Install fragletc"\n---\n\n${body}`
 
-  fs.mkdirSync(PAGES_DIR, { recursive: true })
   fs.writeFileSync(path.join(PAGES_DIR, 'install.md'), content)
   return true
 }

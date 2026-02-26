@@ -145,7 +145,9 @@ export default function InstallPage({ data }) {
       </div>
 
       <div style={s.content}>
-        <CopyableCode html={markdownRemark.html} />
+        {markdownRemark && markdownRemark.html && (
+          <CopyableCode html={markdownRemark.html} />
+        )}
       </div>
     </Layout>
   )
