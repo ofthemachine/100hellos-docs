@@ -44,4 +44,11 @@ exports.createPages = async ({ graphql, actions }) => {
       },
     })
   })
+
+  const installTemplate = path.resolve('./src/templates/install.js')
+  createPage({
+    path: '/install',
+    component: installTemplate,
+    context: {},
+  })
 }

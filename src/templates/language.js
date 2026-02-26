@@ -109,6 +109,59 @@ const s = {
     textDecoration: 'none',
     transition: 'border-color 0.15s ease',
   },
+  mcpCard: {
+    background: 'var(--bg-surface)',
+    border: '2px solid var(--accent)',
+    borderRadius: '12px',
+    padding: '1.25rem',
+    marginBottom: '2rem',
+  },
+  mcpHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    gap: '0.75rem',
+    marginBottom: '0.75rem',
+  },
+  mcpTitle: {
+    margin: 0,
+    fontSize: '1rem',
+    fontFamily: "'JetBrains Mono', monospace",
+    color: 'var(--text-primary)',
+  },
+  mcpBadges: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '0.4rem',
+  },
+  mcpBadge: {
+    fontFamily: "'JetBrains Mono', monospace",
+    fontSize: '0.7rem',
+    fontWeight: 600,
+    padding: '0.2em 0.6em',
+    borderRadius: '6px',
+    background: 'var(--accent)',
+    color: '#000',
+  },
+  mcpBadgeMuted: {
+    fontFamily: "'JetBrains Mono', monospace",
+    fontSize: '0.7rem',
+    fontWeight: 600,
+    padding: '0.2em 0.6em',
+    borderRadius: '6px',
+    background: 'var(--tag-bg)',
+    color: 'var(--tag-text)',
+  },
+  mcpInstallLink: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '0.3rem',
+    fontFamily: "'JetBrains Mono', monospace",
+    fontSize: '0.8rem',
+    color: 'var(--link-color)',
+    textDecoration: 'none',
+  },
   buildInfo: {
     background: 'var(--bg-surface)',
     border: '1px solid var(--border)',
@@ -196,6 +249,28 @@ export default function LanguagePage({ data }) {
       </div>
 
       <div style={s.content}>
+        {fm.fragletEnabled && (
+          <div style={s.mcpCard}>
+            <div style={s.mcpHeader}>
+              <h3 style={s.mcpTitle}>MCP + fragletc</h3>
+              <div style={s.mcpBadges}>
+                <span style={s.mcpBadge}>MCP</span>
+                {fm.hasStdin && <span style={s.mcpBadgeMuted}>stdin</span>}
+                {fm.hasArgs && <span style={s.mcpBadgeMuted}>args</span>}
+              </div>
+            </div>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>
+              This language supports code execution via MCP and the fragletc CLI.
+              {fm.hasStdin && fm.hasArgs && ' Stdin piping and argument passing are both supported.'}
+              {fm.hasStdin && !fm.hasArgs && ' Stdin piping is supported.'}
+              {!fm.hasStdin && fm.hasArgs && ' Argument passing is supported.'}
+            </div>
+            <Link to="/install" style={s.mcpInstallLink}>
+              Install fragletc &rarr;
+            </Link>
+          </div>
+        )}
+
         <CopyableCode html={markdownRemark.html} />
 
         {(fm.influencedBy.length > 0 || fm.influences.length > 0) && (
@@ -282,6 +357,8 @@ export const query = graphql`
         hasGuide
         hasVeinsTest
         fragletEnabled
+        hasStdin
+        hasArgs
         buildDay
       }
     }

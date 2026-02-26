@@ -7,6 +7,7 @@ const yaml = require('js-yaml')
 const HELLOS_DIR = process.env.HELLOS_DIR || '/mnt/100hellos'
 const FRAGLET_DIR = process.env.FRAGLET_DIR || '/mnt/fraglet'
 const OUTPUT_DIR = process.env.OUTPUT_DIR || path.join(__dirname, '..', 'src', 'content', 'languages')
+const PAGES_DIR = process.env.PAGES_DIR || path.join(__dirname, '..', 'src', 'content', 'pages')
 const METADATA_PATH = process.env.METADATA_PATH || path.join(__dirname, '..', 'languages-metadata.yml')
 
 function loadYaml(filePath) {
@@ -181,6 +182,37 @@ function readVeinsTestFiles(veinName) {
   }))
 }
 
+function fileExists(p) {
+  try {
+    return fs.statSync(p).isFile()
+  } catch {
+    return false
+  }
+}
+
+function detectCapabilities(langDir) {
+  const fragletDir = path.join(HELLOS_DIR, langDir, 'fraglet')
+  return {
+    hasStdin: fileExists(path.join(fragletDir, 'verify_stdin.sh')),
+    hasArgs: fileExists(path.join(fragletDir, 'verify_args.sh')),
+  }
+}
+
+function generateInstallPage() {
+  const installMd = tryRead(path.join(FRAGLET_DIR, 'INSTALL.md'))
+  if (!installMd) {
+    console.warn('    WARNING: INSTALL.md not found in fraglet repo — skipping install page')
+    return false
+  }
+
+  const body = stripH1(installMd)
+  const content = `---\nslug: "install"\ntitle: "Install fragletc"\n---\n\n${body}`
+
+  fs.mkdirSync(PAGES_DIR, { recursive: true })
+  fs.writeFileSync(path.join(PAGES_DIR, 'install.md'), content)
+  return true
+}
+
 function findVeinForLanguage(langSlug, veinsMap) {
   if (veinsMap.has(langSlug)) return veinsMap.get(langSlug)
   for (const [, vein] of veinsMap) {
@@ -203,6 +235,7 @@ function buildLanguagePage(langDir, langSlug, meta, vein, schedule, veinsMap) {
   const veinName = vein ? vein.name : null
 
   const veinsTestFiles = veinName ? readVeinsTestFiles(veinName) : []
+  const capabilities = detectCapabilities(langDir)
 
   const description = readme ? stripH1(readme) : stripH1(generateReadme(meta))
 
@@ -233,6 +266,8 @@ function buildLanguagePage(langDir, langSlug, meta, vein, schedule, veinsMap) {
     hasGuide: guide != null,
     hasVeinsTest: veinsTestFiles.length > 0,
     fragletEnabled,
+    hasStdin: fragletEnabled && capabilities.hasStdin,
+    hasArgs: fragletEnabled && capabilities.hasArgs,
     buildDay,
   }
 
@@ -292,6 +327,10 @@ function main() {
   console.log(`    output:    ${OUTPUT_DIR}`)
 
   fs.mkdirSync(OUTPUT_DIR, { recursive: true })
+
+  if (generateInstallPage()) {
+    console.log('    Generated install page from INSTALL.md')
+  }
 
   const veinsMap = loadVeinsMap()
   const schedule = loadBuildSchedule()
