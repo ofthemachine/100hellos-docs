@@ -1,0 +1,61 @@
+name: Deploy Docs Site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  pages: write
+  id-token: write
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/checkout@v4
+        with:
+          repository: ofthemachine/100hellos
+          ref: hackathon-branch-handoff
+          path: upstream/100hellos
+
+      - uses: actions/checkout@v4
+        with:
+          repository: ofthemachine/fraglet
+          ref: hackathon-branch-handoff
+          path: upstream/fraglet
+
+      - name: Build docs container
+        run: docker build -t 100hellos-docs .
+
+      - name: Generate static site
+        run: |
+          mkdir -p output
+          docker run --rm \
+            -v "$PWD/upstream/100hellos":/mnt/100hellos:ro \
+            -v "$PWD/upstream/fraglet":/mnt/fraglet:ro \
+            -v "$PWD/output":/static_site \
+            -e UID=$(id -u) \
+            -e GID=$(id -g) \
+            100hellos-docs
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: output
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment
