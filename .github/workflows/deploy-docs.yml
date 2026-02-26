@@ -23,13 +23,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: ofthemachine/100hellos
-          ref: hackathon-branch-handoff
+          ref: main
           path: upstream/100hellos
 
       - uses: actions/checkout@v4
         with:
           repository: ofthemachine/fraglet
-          ref: hackathon-branch-handoff
+          ref: main
           path: upstream/fraglet
 
       - name: Build docs container

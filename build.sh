@@ -10,9 +10,9 @@ OUTPUT_DIR="${OUTPUT_DIR:-$SCRIPT_DIR/public}"
 
 IMAGE_NAME="ofthemachine/100hellos-docs:local"
 
-echo "==> Checking out hackathon branches..."
-(cd "$HELLOS_DIR" && git fetch origin && git checkout origin/hackathon-branch-handoff)
-(cd "$FRAGLET_DIR" && git fetch origin && git checkout origin/hackathon-branch-handoff)
+echo "==> Checking out main branches..."
+(cd "$HELLOS_DIR" && git fetch origin && git checkout origin/main)
+(cd "$FRAGLET_DIR" && git fetch origin && git checkout origin/main)
 
 echo "==> Building docs container..."
 docker build -t "$IMAGE_NAME" "$SCRIPT_DIR"

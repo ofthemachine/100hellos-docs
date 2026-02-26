@@ -123,6 +123,24 @@ h1 { font-size: 2rem; }
 h2 { font-size: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3em; }
 h3 { font-size: 1.2rem; }
 
+h1 .anchor, h2 .anchor, h3 .anchor, h4 .anchor {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  margin-left: -1.25em;
+  padding-right: 0.25em;
+  position: absolute;
+}
+
+h1:hover .anchor, h2:hover .anchor, h3:hover .anchor, h4:hover .anchor {
+  opacity: 1;
+}
+
+h1 .anchor svg, h2 .anchor svg, h3 .anchor svg, h4 .anchor svg {
+  fill: var(--text-muted);
+  width: 0.75em;
+  height: 0.75em;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
