@@ -4,11 +4,7 @@ import Layout from '../components/Layout'
 import SEO from '../components/SEO'
 import LanguageCard from '../components/LanguageCard'
 import TimelineGraph from '../components/TimelineGraph'
-
-const CATEGORIES = [
-  'systems', 'general-purpose', 'functional', 'scripting', 'web',
-  'historical', 'esoteric', 'jvm', 'shell', 'ml-family',
-]
+import { CATEGORIES } from '../categories'
 
 const s = {
   hero: {

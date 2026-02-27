@@ -4,19 +4,7 @@ import Layout from '../components/Layout'
 import SEO from '../components/SEO'
 import CopyableCode from '../components/CopyableCode'
 import CopyableCommand from '../components/CopyableCommand'
-
-const CATEGORY_COLORS = {
-  systems: '#ff6b6b',
-  'general-purpose': '#4ecdc4',
-  functional: '#a78bfa',
-  scripting: '#fbbf24',
-  web: '#60a5fa',
-  historical: '#9ca3af',
-  esoteric: '#f472b6',
-  jvm: '#fb923c',
-  shell: '#34d399',
-  'ml-family': '#c084fc',
-}
+import { CATEGORY_COLORS } from '../categories'
 
 const s = {
   hero: {

@@ -1,40 +1,13 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react'
 import { navigate } from 'gatsby'
 import '../styles/timeline.css'
-
-const CATEGORY_COLORS = {
-  systems: '#ff6b6b',
-  'general-purpose': '#4ecdc4',
-  functional: '#a78bfa',
-  scripting: '#fbbf24',
-  web: '#60a5fa',
-  historical: '#9ca3af',
-  esoteric: '#f472b6',
-  jvm: '#fb923c',
-  shell: '#34d399',
-  'ml-family': '#c084fc',
-}
-
-const CATEGORY_LANES = {
-  historical: 0,
-  systems: 1,
-  'general-purpose': 2,
-  functional: 3,
-  'ml-family': 4,
-  jvm: 5,
-  scripting: 6,
-  web: 7,
-  shell: 8,
-  esoteric: 9,
-}
-
-const ALL_CATEGORIES = Object.keys(CATEGORY_LANES)
+import { CATEGORY_COLORS, CATEGORY_LANES, CATEGORIES } from '../categories'
 
 export default function TimelineGraph({ languages }) {
   const containerRef = useRef(null)
   const svgRef = useRef(null)
   const tooltipRef = useRef(null)
-  const [activeCategories, setActiveCategories] = useState(new Set(ALL_CATEGORIES))
+  const [activeCategories, setActiveCategories] = useState(new Set(CATEGORIES))
   const [dimensions, setDimensions] = useState({ width: 1200, height: 450 })
 
   const toggleCategory = (cat) => {
@@ -255,7 +228,7 @@ export default function TimelineGraph({ languages }) {
         <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontFamily: "'JetBrains Mono', monospace", marginRight: '0.25rem' }}>
           filter
         </span>
-        {ALL_CATEGORIES.map(cat => (
+        {CATEGORIES.map(cat => (
           <button
             key={cat}
             className={`timeline-control-btn ${activeCategories.has(cat) ? 'active' : ''}`}
