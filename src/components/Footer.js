@@ -1,5 +1,17 @@
 import React from 'react'
 
+const SITE_URL = 'https://ofthemachine.github.io/100hellos-docs'
+
+function feedbackUrl(path) {
+  const pageUrl = `${SITE_URL}${path}`
+  const params = new URLSearchParams({
+    template: 'page-feedback.yml',
+    title: `[Feedback] ${path}`,
+    url: pageUrl,
+  })
+  return `https://github.com/ofthemachine/100hellos-docs/issues/new?${params}`
+}
+
 const styles = {
   footer: {
     borderTop: '1px solid var(--border)',
@@ -20,6 +32,7 @@ const styles = {
 }
 
 export default function Footer() {
+  const path = typeof window !== 'undefined' ? window.location.pathname.replace('/100hellos-docs', '') || '/' : '/'
   return (
     <footer style={styles.footer}>
       <p style={styles.text}>
@@ -29,6 +42,10 @@ export default function Footer() {
         {' + '}
         <a href="https://github.com/ofthemachine/fraglet" style={styles.link} target="_blank" rel="noopener noreferrer">
           fraglet
+        </a>
+        {' · '}
+        <a href={feedbackUrl(path)} style={styles.link} target="_blank" rel="noopener noreferrer">
+          Suggest Changes
         </a>
       </p>
     </footer>
