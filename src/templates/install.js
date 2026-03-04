@@ -52,7 +52,7 @@ const s = {
   },
   primaryBtn: {
     background: 'var(--accent)',
-    color: '#000',
+    color: 'var(--accent-contrast)',
   },
   secondaryBtn: {
     background: 'var(--bg-surface)',

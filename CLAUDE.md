@@ -7,7 +7,8 @@ Containerized Gatsby static site that aggregates content from the `100hellos/` a
 - **Gatsby** static site generator running inside a Docker container
 - Content is **not checked in** — it's read from mounted `100hellos/` and `fraglet/` volumes at build time
 - A Node.js **preprocessor** (`scripts/preprocess.js`) gathers markdown, injects front-matter, and writes to `src/content/languages/` before Gatsby builds
-- The `languages-metadata.yml` file provides curated data (year, paradigm, relationships) for the timeline graph
+- Language metadata (year, paradigm, category, influencedBy) lives in each language's `metadata.yml` inside the `100hellos/` repo
+- The `influences` field is computed at build time as the inverse of all `influencedBy` relationships
 
 ## Build
 
@@ -19,7 +20,6 @@ This checks out `hackathon-branch-handoff` on both upstream repos, builds the Do
 
 ## Key Files
 
-- `languages-metadata.yml` — Source of truth for language metadata (year, paradigm, influencedBy, category)
 - `scripts/preprocess.js` — Reads from `/mnt/100hellos` and `/mnt/fraglet`, generates markdown with front-matter
 - `scripts/entrypoint.sh` — Container entrypoint: validates mounts → preprocess → gatsby build → copy output
 - `gatsby-node.js` — Creates `/languages/{slug}` pages from generated markdown
@@ -39,8 +39,8 @@ Light/dark toggle via CSS custom properties. Theme preference stored in localSto
 ## Adding a New Language
 
 When a new language is added to 100hellos:
-1. Add an entry to `languages-metadata.yml` with year, paradigm, influencedBy, influences, category
-2. Rebuild — the preprocessor auto-discovers new directories
+1. Add a `metadata.yml` to the language directory with displayName, year, paradigm, influencedBy, category
+2. Rebuild — the preprocessor auto-discovers new directories and computes influences
 
 ## Conventions
 

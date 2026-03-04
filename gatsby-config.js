@@ -24,21 +24,6 @@ module.exports = {
       },
     },
     {
-      resolve: 'gatsby-source-filesystem',
-      options: {
-        name: 'data',
-        path: `${__dirname}/`,
-        ignore: [
-          '**/node_modules/**',
-          '**/src/**',
-          '**/public/**',
-          '**/.cache/**',
-          '**/static/**',
-          '**/scripts/**',
-        ],
-      },
-    },
-    {
       resolve: 'gatsby-transformer-remark',
       options: {
         plugins: [
@@ -53,7 +38,6 @@ module.exports = {
         ],
       },
     },
-    'gatsby-transformer-yaml',
     'gatsby-plugin-react-helmet',
     {
       resolve: 'gatsby-plugin-manifest',

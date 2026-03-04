@@ -37,7 +37,6 @@ echo "==> Running preprocessor..."
 HELLOS_DIR=/mnt/100hellos \
 FRAGLET_DIR=/mnt/fraglet \
 OUTPUT_DIR=/app/src/content/languages \
-METADATA_PATH=/app/languages-metadata.yml \
   node /app/scripts/preprocess.js
 
 echo "==> Building Gatsby site..."

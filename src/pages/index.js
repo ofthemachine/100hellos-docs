@@ -100,8 +100,8 @@ export default function IndexPage({ data }) {
   }, [data])
 
   const timelineData = useMemo(() => {
-    return data.allLanguagesMetadataYaml.nodes
-  }, [data])
+    return allLanguages
+  }, [allLanguages])
 
   const filtered = useMemo(() => {
     return allLanguages.filter(lang => {
@@ -209,20 +209,11 @@ export const query = graphql`
           year
           category
           paradigm
+          influencedBy
+          influences
           fragletEnabled
           extensions
         }
-      }
-    }
-    allLanguagesMetadataYaml {
-      nodes {
-        slug
-        displayName
-        year
-        paradigm
-        influencedBy
-        influences
-        category
       }
     }
   }

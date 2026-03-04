@@ -8,7 +8,6 @@ const HELLOS_DIR = process.env.HELLOS_DIR || '/mnt/100hellos'
 const FRAGLET_DIR = process.env.FRAGLET_DIR || '/mnt/fraglet'
 const OUTPUT_DIR = process.env.OUTPUT_DIR || path.join(__dirname, '..', 'src', 'content', 'languages')
 const PAGES_DIR = process.env.PAGES_DIR || path.join(__dirname, '..', 'src', 'content', 'pages')
-const METADATA_PATH = process.env.METADATA_PATH || path.join(__dirname, '..', 'languages-metadata.yml')
 
 function loadYaml(filePath) {
   return yaml.load(fs.readFileSync(filePath, 'utf8'))
@@ -69,13 +68,37 @@ function loadBuildSchedule() {
   return schedule
 }
 
-function loadMetadata() {
-  const entries = loadYaml(METADATA_PATH)
+function loadLanguageMetadata(langSlug) {
+  const metaPath = path.join(HELLOS_DIR, langSlug, 'metadata.yml')
+  const data = tryRead(metaPath)
+  if (!data) return null
+  const meta = yaml.load(data)
+  meta.slug = langSlug
+  return meta
+}
+
+function loadAllMetadata(languages) {
   const map = new Map()
-  for (const entry of entries) {
-    map.set(entry.slug, entry)
+  for (const slug of languages) {
+    const meta = loadLanguageMetadata(slug)
+    if (meta) map.set(slug, meta)
   }
   return map
+}
+
+function computeInfluences(metadata) {
+  const influences = new Map()
+  for (const [slug] of metadata) {
+    influences.set(slug, [])
+  }
+  for (const [slug, meta] of metadata) {
+    for (const inf of (meta.influencedBy || [])) {
+      if (influences.has(inf)) {
+        influences.get(inf).push(slug)
+      }
+    }
+  }
+  return influences
 }
 
 function discoverLanguages() {
@@ -136,6 +159,24 @@ function extensionToLanguageHint(ext) {
     '.dash': 'bash', '.tcsh': 'bash', '.csh': 'bash', '.prolog': 'prolog',
   }
   return map[ext] || 'text'
+}
+
+const PRISM_LANGUAGES = new Set([
+  'python', 'ruby', 'javascript', 'typescript', 'go', 'rust', 'java', 'c', 'cpp',
+  'csharp', 'fsharp', 'haskell', 'ocaml', 'elixir', 'erlang', 'clojure', 'scala',
+  'kotlin', 'lua', 'perl', 'perl6', 'php', 'r', 'julia', 'dart', 'swift', 'bash',
+  'shell', 'sh', 'zig', 'nim', 'd', 'v', 'crystal', 'pascal', 'fortran', 'cobol',
+  'ada', 'vbnet', 'groovy', 'coffeescript', 'racket', 'scheme', 'lisp', 'tcl', 'awk',
+  'sml', 'smalltalk', 'nasm', 'wasm', 'nix', 'objectivec', 'prolog', 'json', 'yaml',
+  'toml', 'xml', 'html', 'css', 'sql', 'markdown', 'diff', 'docker', 'makefile',
+  'text', 'plaintext', 'none',
+])
+
+function sanitizeCodeFences(markdown) {
+  if (!markdown) return ''
+  return markdown.replace(/^```(\w+)/gm, (match, lang) => {
+    return PRISM_LANGUAGES.has(lang) ? match : '```text'
+  })
 }
 
 function stripH1(markdown) {
@@ -240,7 +281,7 @@ function buildLanguagePage(langDir, langSlug, meta, vein, schedule, veinsMap) {
   const veinsTestFiles = veinName ? readVeinsTestFiles(veinName) : []
   const capabilities = detectCapabilities(langDir)
 
-  const description = readme ? stripH1(readme) : stripH1(generateReadme(meta))
+  const description = sanitizeCodeFences(readme ? stripH1(readme) : stripH1(generateReadme(meta)))
 
   const ext = helloFile ? path.extname(helloFile) : ''
   const langHint = extensionToLanguageHint(ext)
@@ -287,7 +328,7 @@ function buildLanguagePage(langDir, langSlug, meta, vein, schedule, veinsMap) {
 
   if (guide) {
     body += `## Coding Guide\n\n`
-    body += stripH1(guide) + '\n\n'
+    body += sanitizeCodeFences(stripH1(guide)) + '\n\n'
   }
 
   if (veinsTestFiles.length > 0) {
@@ -337,10 +378,12 @@ function main() {
 
   const veinsMap = loadVeinsMap()
   const schedule = loadBuildSchedule()
-  const metadata = loadMetadata()
   const languages = discoverLanguages()
+  const metadata = loadAllMetadata(languages)
+  const influencesMap = computeInfluences(metadata)
 
   console.log(`    Found ${languages.length} languages`)
+  console.log(`    ${metadata.size} with metadata`)
   console.log(`    ${veinsMap.size} fraglet-enabled veins`)
 
   let generated = 0
@@ -353,6 +396,8 @@ function main() {
       continue
     }
 
+    meta.influences = influencesMap.get(langDir) || []
+
     const vein = findVeinForLanguage(langDir, veinsMap)
     const slug = meta.slug || langDir
     const content = buildLanguagePage(langDir, slug, meta, vein, schedule, veinsMap)
@@ -362,7 +407,7 @@ function main() {
   }
 
   if (missingMeta.length > 0) {
-    console.warn(`    WARNING: ${missingMeta.length} languages missing from languages-metadata.yml:`)
+    console.warn(`    WARNING: ${missingMeta.length} languages missing metadata.yml:`)
     console.warn(`    ${missingMeta.join(', ')}`)
   }
 

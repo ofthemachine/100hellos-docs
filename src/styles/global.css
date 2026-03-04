@@ -12,6 +12,7 @@
   --accent: #00ff88;
   --accent-dim: #00cc6a;
   --accent-secondary: #00b4d8;
+  --accent-contrast: #000000;
   --border: #2a2a3e;
   --code-bg: #111122;
   --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
@@ -39,6 +40,7 @@
   --accent: #0066cc;
   --accent-dim: #004d99;
   --accent-secondary: #0088aa;
+  --accent-contrast: #ffffff;
   --border: #ddd;
   --code-bg: #f5f5fa;
   --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);

@@ -41,7 +41,7 @@ const s = {
   },
   fragletBadge: {
     background: 'var(--accent)',
-    color: '#000',
+    color: 'var(--accent-contrast)',
     fontFamily: "'JetBrains Mono', monospace",
     fontSize: '0.7rem',
     fontWeight: 600,
@@ -130,7 +130,7 @@ const s = {
     padding: '0.2em 0.6em',
     borderRadius: '6px',
     background: 'var(--accent)',
-    color: '#000',
+    color: 'var(--accent-contrast)',
   },
   mcpBadgeMuted: {
     fontFamily: "'JetBrains Mono', monospace",

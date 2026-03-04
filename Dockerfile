@@ -1,13 +1,13 @@
 FROM node:20-alpine
 
-RUN apk add --no-cache bash
+RUN apk add --no-cache bash util-linux
 
 WORKDIR /app
 
 COPY package.json package-lock.json* ./
 RUN npm install
 
-COPY gatsby-config.js gatsby-node.js languages-metadata.yml ./
+COPY gatsby-config.js gatsby-node.js ./
 COPY scripts/ ./scripts/
 COPY src/ ./src/
 COPY static/ ./static/
