@@ -7,7 +7,7 @@ body:
     attributes:
       label: Page URL
       description: The page this feedback is about.
-      placeholder: https://ofthemachine.github.io/100hellos-docs/...
+      placeholder: https://100hellos.ofthemachine.com/...
     validations:
       required: true
   - type: textarea

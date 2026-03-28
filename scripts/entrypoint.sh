@@ -41,7 +41,7 @@ OUTPUT_DIR=/app/src/content/languages \
 
 echo "==> Building Gatsby site..."
 cd /app
-npx gatsby build --prefix-paths
+npx gatsby build
 
 echo "==> Copying output to /static_site..."
 cp -r /app/public/* /static_site/

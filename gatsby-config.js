@@ -1,9 +1,8 @@
 module.exports = {
-  pathPrefix: '/100hellos-docs',
   siteMetadata: {
     title: '100 Hellos',
     description: 'A showcase of ~100 programming languages with containerized execution environments',
-    siteUrl: 'https://ofthemachine.github.io/100hellos-docs',
+    siteUrl: 'https://100hellos.ofthemachine.com',
   },
   plugins: [
     'gatsby-plugin-image',
@@ -44,7 +43,7 @@ module.exports = {
       options: {
         name: '100 Hellos',
         short_name: '100Hellos',
-        start_url: '/100hellos-docs/',
+        start_url: '/',
         background_color: '#0a0a0a',
         theme_color: '#00ff88',
         display: 'minimal-ui',

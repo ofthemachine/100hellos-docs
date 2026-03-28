@@ -1,6 +1,6 @@
 import React from 'react'
 
-const SITE_URL = 'https://ofthemachine.github.io/100hellos-docs'
+const SITE_URL = 'https://100hellos.ofthemachine.com'
 
 function feedbackUrl(path) {
   const pageUrl = `${SITE_URL}${path}`
@@ -32,7 +32,7 @@ const styles = {
 }
 
 export default function Footer() {
-  const path = typeof window !== 'undefined' ? window.location.pathname.replace('/100hellos-docs', '') || '/' : '/'
+  const path = typeof window !== 'undefined' ? window.location.pathname : '/'
   return (
     <footer style={styles.footer}>
       <p style={styles.text}>
